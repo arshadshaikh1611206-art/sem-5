@@ -1,0 +1,58 @@
+Add the following dependency to pom.xml:
+<dependencies>
+    <dependency>
+        <groupId>org.seleniumhq.selenium</groupId>
+        <artifactId>selenium-java</artifactId>
+        <version>4.46.0</version>
+    </dependency>
+ 
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>5.13.4</version>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
+
+
+
+-jar selenium-server-4.50.0.jar standalone
+
+
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+
+
+import java.net.URI;
+
+
+
+
+public class CrossBrowserTesting {
+   public static void main (String[] args) throws Exception{
+       for(String browser : new String[] {"firefox" , "MicrosoftEdge"}){
+         long intitialTime = System.currentTimeMillis();
+           WebDriver driver = null ;
+
+
+           try {
+               DesiredCapabilities capabilities = new DesiredCapabilities();
+               capabilities.setBrowserName(browser);
+
+
+               driver = new RemoteWebDriver(URI.create("http://localhost:4444").toURL(),capabilities);
+               driver.get("https://google.com");
+
+
+               System.out.println("\nBrowser : " + browser);
+               System.out.println(("\nTitle:" + driver.getTitle()));
+               System.out.println("\nTime:" + (System.currentTimeMillis() - intitialTime) + "ms");
+               System.out.println("\n Status : PASSED");
+           }catch (Exception e){
+               System.out.println("Exception" + e );
+           }
+       };
+   };
+}
