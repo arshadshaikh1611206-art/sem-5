@@ -1,0 +1,117 @@
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+
+
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
+import java.io.File;
+
+
+public class FileUploadDownloadTest {
+
+
+   public static void main(String[] args) throws Exception {
+
+
+       String basePath = "/home/catlium/selenium";
+       String uploadPath = basePath + "/upload_test.txt";
+       String downloadPath = basePath + "/downloads";
+
+
+       FirefoxOptions options = new FirefoxOptions();
+
+
+       options.addPreference("browser.download.folderList", 2);
+       options.addPreference("browser.download.dir", downloadPath);
+       options.addPreference("browser.download.useDownloadDir", true);
+
+
+       WebDriver driver = new FirefoxDriver(options);
+
+
+       try {
+
+
+           driver.get("file:///home/catlium/selenium/index.html");
+
+
+           // ---------------- File Upload ----------------
+
+
+           driver.findElement(By.id("fileUpload"))
+                   .sendKeys(uploadPath);
+
+
+           driver.findElement(By.id("uploadBtn")).click();
+
+
+           String status = driver.findElement(
+                   By.id("uploadStatus")
+           ).getText();
+
+
+           if (status.equals("File uploaded successfully")) {
+               System.out.println("PASS: File uploaded successfully.");
+           } else {
+               System.out.println("FAIL: File upload failed.");
+           }
+
+
+           // ---------------- File Download ----------------
+
+
+           File downloadedFile =
+                   new File(downloadPath + "/sample.txt");
+
+
+           if (downloadedFile.exists()) {
+               downloadedFile.delete();
+           }
+
+
+           // Click Download
+           driver.findElement(By.id("downloadBtn")).click();
+
+
+           // Give Firefox time to show its download dialog
+           Thread.sleep(1500);
+
+
+           // Use Robot to press Enter on Firefox's download confirmation
+           Robot robot = new Robot();
+
+
+           robot.keyPress(KeyEvent.VK_ENTER);
+           robot.keyRelease(KeyEvent.VK_ENTER);
+
+
+           // Wait for download
+           for (int i = 0; i < 20; i++) {
+
+
+               if (downloadedFile.exists()) {
+                   break;
+               }
+
+
+               Thread.sleep(500);
+           }
+
+
+           // Validate download
+           if (downloadedFile.exists()) {
+               System.out.println("PASS: File downloaded successfully.");
+           } else {
+               System.out.println("FAIL: File download failed.");
+           }
+
+
+       } finally {
+           driver.quit();
+       }
+   }
+
+
+}
