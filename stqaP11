@@ -7,6 +7,35 @@
     </dependencies>
 
 
+<html lang="en">
+<head>
+  <title>File Upload and Download</title>
+</head>
+<body>
+<h1>File Upload</h1>
+<input type="file" id="UploadFile">
+<button onclick="upload()" id="uploadBtn" >Upload</button>
+<p id="uploadStatus"></p>
+<hr>
+<h1>File Download</h1>
+<a href="sample.txt" download>
+  <button id="downloadBtn">download</button>
+</a>
+<script>
+  function upload() {
+    const file = document.getElementById("UploadFile")
+
+    if(file.files.length > 0){
+      document.getElementById("uploadStatus").innerHTML = "File Upload Successfully"
+    } else {
+      document.getElementById("uploadStatus").innerHTML = "File Upload Failed"
+    }
+  }
+</script>
+</body>
+</html>
+
+
 package org.example;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
